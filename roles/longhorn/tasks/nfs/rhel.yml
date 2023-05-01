@@ -1,0 +1,18 @@
+---
+- name: Ensure NFS kernel parameters enabled
+  lineinfile:
+    name: "/boot/config-{{ ansible_kernel }}"
+    line: "{{ item }}=y"
+    state: present
+  loop:
+    - CONFIG_NFS_V4_1
+    - CONFIG_NFS_V4_2
+  check_mode: true
+  register: kernel_nfs
+  failed_when: (kernel_nfs is changed) or (kernel_nfs is failed)
+
+- name: Install nfs-utils
+  package:
+    name: nfs-utils
+    state: present
+  become: true

@@ -1,0 +1,18 @@
+---
+- hosts: k3s_master
+  roles:
+    - role: k3s
+      tags:
+        - k3s
+
+- hosts: k3s_node
+  roles:
+    - role: k3s
+      tags:
+        - k3s
+
+- hosts: longhorn_node
+  roles:
+    - role: longhorn
+      tags:
+        - longhorn

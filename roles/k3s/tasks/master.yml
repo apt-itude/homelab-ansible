@@ -1,0 +1,89 @@
+---
+- set_fact:
+    k3s_server_dir: "{{ k3s_data_dir }}/server"
+
+- set_fact:
+    k3s_server_manifests_dir: "{{ k3s_server_dir }}/manifests"
+
+- name: Ensure k3s server directories exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  become: true
+  loop:
+    - "{{ k3s_server_dir }}"
+    - "{{ k3s_server_manifests_dir }}"
+
+- name: Disable k3s components
+  copy:
+    dest: "{{ k3s_server_manifests_dir }}/{{ item }}.yaml.skip"
+    content: ""
+    mode: 0600
+  become: true
+  loop: "{{ k3s_disabled_components }}"
+
+- name: Copy k3s manifests
+  copy:
+    src: "{{ item }}"
+    dest: "{{ k3s_server_manifests_dir }}/"
+    mode: 0600
+  become: true
+  with_fileglob:
+    - "{{ inventory_hostname }}/k3s/data/server/manifests/*"
+
+- name: Install k3s as master
+  command:
+    argv:
+      - /tmp/install_k3s.sh
+  environment:
+    INSTALL_K3S_VERSION: "{{ k3s_version }}"
+    INSTALL_K3S_EXEC: "--config {{ k3s_config_file }}"
+    INSTALL_K3S_FORCE_RESTART: "true"
+  become: true
+  register: k3s_master_install_output
+
+- name: Installation output
+  debug:
+    msg: "{{ k3s_master_install_output.stdout }}"
+
+- name: Wait for token
+  wait_for:
+    path: "{{ k3s_server_dir }}/token"
+  become: true
+
+- name: Read token from master
+  slurp:
+    path: "{{ k3s_server_dir }}/token"
+  register: k3s_node_token_file
+  become: true
+
+- name: Store token
+  set_fact:
+    k3s_token: "{{ k3s_node_token_file.content | b64decode | regex_replace('\n', '') }}"
+
+- name: Read k3s client config from master
+  slurp:
+    path: "{{ k3s_config_dir }}/k3s.yaml"
+  register: k3s_client_config_file
+  become: true
+
+- name: Store k3s client config
+  set_fact:
+    k3s_client_config: "{{ k3s_client_config_file.content | b64decode | from_yaml }}"
+
+- name: Cluster certificate-authority-data
+  debug:
+    msg: "{{ k3s_client_config.clusters[0].cluster['certificate-authority-data'] }}"
+
+- name: Cluster server
+  debug:
+    msg: "https://{{ ansible_host }}:{{ k3s_https_listen_port }}"
+
+- name: User client-certificate-data
+  debug:
+    msg: "{{ k3s_client_config.users[0].user['client-certificate-data'] }}"
+
+- name: User client-key-data
+  debug:
+    msg: "{{ k3s_client_config.users[0].user['client-key-data'] }}"

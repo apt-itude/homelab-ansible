@@ -1,0 +1,20 @@
+---
+- name: Install iscsi-initiator-utils
+  package:
+    name: iscsi-initiator-utils
+    state: present
+  become: true
+
+- name: Write iscsi name
+  copy:
+    content: InitiatorName=$(/sbin/iscsi-iname)
+    dest: /etc/iscsi/initiatorname.iscsi
+    mode: 0600
+  become: true
+
+- name: Enable and start iscsi daemon
+  systemd:
+    name: iscsid
+    enabled: true
+    state: started
+  become: true

@@ -1,0 +1,11 @@
+---
+- name: Install k3s as node
+  command:
+    argv:
+      - /tmp/install_k3s.sh
+  environment:
+    INSTALL_K3S_VERSION: "{{ k3s_version }}"
+    INSTALL_K3S_EXEC: "--config {{ k3s_config_file }}"
+    K3S_URL: "{{ k3s_master_ip }}"
+    K3S_TOKEN: "{{ k3s_token }}"
+  become: true

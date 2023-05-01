@@ -1,0 +1,8 @@
+---
+- name: Install requirements for kubernetes.core
+  package:
+    name: "{{ item }}"
+    state: present
+  become: true
+  loop:
+    - python3-kubernetes

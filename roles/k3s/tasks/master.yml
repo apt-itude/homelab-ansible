@@ -23,14 +23,23 @@
   become: true
   loop: "{{ k3s_disabled_components }}"
 
-- name: Copy k3s manifests
+- name: Copy static k3s manifests
   copy:
     src: "{{ item }}"
     dest: "{{ k3s_server_manifests_dir }}/"
     mode: 0600
   become: true
   with_fileglob:
-    - "{{ inventory_hostname }}/k3s/data/server/manifests/*"
+    - "{{ inventory_hostname }}/k3s/data/server/manifests/*.yaml"
+
+- name: Template dynamic k3s manifests
+  template:
+    src: "{{ item }}"
+    dest: "{{ k3s_server_manifests_dir }}/{{ item | basename | splitext | first }}"
+    mode: 0600
+  become: true
+  with_fileglob:
+    - "{{ inventory_hostname }}/k3s/data/server/manifests/*.yaml.j2"
 
 - name: Install k3s as master
   command:

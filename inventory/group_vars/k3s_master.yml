@@ -1,3 +1,4 @@
 k3s_is_master: true
 k3s_disabled_components:
   - local-storage
+  - servicelb

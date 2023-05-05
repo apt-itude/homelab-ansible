@@ -15,13 +15,13 @@
     - "{{ k3s_server_dir }}"
     - "{{ k3s_server_manifests_dir }}"
 
-- name: Disable k3s components
+- name: Disable k3s manifests
   copy:
     dest: "{{ k3s_server_manifests_dir }}/{{ item }}.yaml.skip"
     content: ""
     mode: 0600
   become: true
-  loop: "{{ k3s_disabled_components }}"
+  loop: "{{ k3s_disabled_manifests }}"
 
 - name: Copy static k3s manifests
   copy:
@@ -47,7 +47,7 @@
       - /tmp/install_k3s.sh
   environment:
     INSTALL_K3S_VERSION: "{{ k3s_version }}"
-    INSTALL_K3S_EXEC: "--config {{ k3s_config_file }}"
+    INSTALL_K3S_EXEC: "--config {{ k3s_config_file }}{% for component in k3s_disabled_components %} --disable {{ component }}{% endfor %}"
     INSTALL_K3S_FORCE_RESTART: "true"
   become: true
   register: k3s_master_install_output

@@ -12,6 +12,16 @@ spec:
   repo: https://argoproj.github.io/argo-helm
   chart: argo-cd
   targetNamespace: argocd
+  valuesContent: |-
+    server:
+      ingress:
+        enabled: true
+        hosts:
+          - argocd.lucyscrib.com
+        pathType: ImplementationSpecific
+    configs:
+      params:
+        server.insecure: true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application

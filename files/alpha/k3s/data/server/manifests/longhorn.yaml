@@ -15,6 +15,9 @@ spec:
   valuesContent: |-
     defaultSettings:
       createDefaultDiskLabeledNodes: true
+      defaultReplicaCount: 1
+    persistence:
+      defaultClassReplicaCount: 1
     ingress:
       enabled: true
       host: longhorn.lucyscrib.com

@@ -15,13 +15,6 @@
     mode: 0755
   become: true
 
-- name: Configure k3s
-  template:
-    src: config.yml.j2
-    dest: "{{ k3s_config_file }}"
-    mode: 0600
-  become: true
-
 - name: Download k3s install script
   get_url:
     url: https://get.k3s.io

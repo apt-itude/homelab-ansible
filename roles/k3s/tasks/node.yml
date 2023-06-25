@@ -1,4 +1,17 @@
 ---
+- set_fact:
+    k3s_url: "https://{{ k3s_master_ip }}:{{ k3s_https_listen_port }}"
+
+- set_fact:
+    k3s_token: "{{ hostvars[groups['k3s_master'][0]]['k3s_token'] }}"
+
+- name: Configure k3s
+  template:
+    src: node-config.yml.j2
+    dest: "{{ k3s_config_file }}"
+    mode: 0600
+  become: true
+
 - name: Install k3s as node
   command:
     argv:
@@ -6,6 +19,12 @@
   environment:
     INSTALL_K3S_VERSION: "{{ k3s_version }}"
     INSTALL_K3S_EXEC: "--config {{ k3s_config_file }}"
-    K3S_URL: "{{ k3s_master_ip }}"
+    INSTALL_K3S_FORCE_RESTART: "true"
+    K3S_URL: "{{ k3s_url }}"
     K3S_TOKEN: "{{ k3s_token }}"
   become: true
+  register: k3s_node_install_output
+
+- name: Installation output
+  debug:
+    msg: "{{ k3s_node_install_output.stdout }}"

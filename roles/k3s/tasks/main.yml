@@ -2,6 +2,11 @@
 - include_tasks: prereqs/rhel.yml
   when: ansible_os_family == 'RedHat'
 
+- include_tasks: prereqs/rpios.yml
+  when:
+    - raspberry_pi | default(false)
+    - ansible_os_family == 'Debian'
+
 - set_fact:
     k3s_config_file: "{{ k3s_config_dir }}/config.yaml"
 

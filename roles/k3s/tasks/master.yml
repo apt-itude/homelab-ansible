@@ -5,6 +5,13 @@
 - set_fact:
     k3s_server_manifests_dir: "{{ k3s_server_dir }}/manifests"
 
+- name: Configure k3s
+  template:
+    src: master-config.yml.j2
+    dest: "{{ k3s_config_file }}"
+    mode: 0600
+  become: true
+
 - name: Ensure k3s server directories exists
   file:
     path: "{{ item }}"

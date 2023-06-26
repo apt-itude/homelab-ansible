@@ -1,0 +1,12 @@
+---
+- name: Install required utils
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - bash
+    - curl
+    - grep
+    - gawk
+    - util-linux
+  become: true

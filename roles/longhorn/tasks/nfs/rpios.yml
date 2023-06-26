@@ -1,0 +1,36 @@
+---
+- name: Enable the configs module
+  community.general.modprobe:
+    name: configs
+    state: present
+
+- name: Unarchive kernel config
+  command:
+    argv:
+      - gunzip
+      - -c
+      - /proc/config.gz
+  register: gunzip_kernel_config_output
+
+- name: Write kernel config to file
+  copy:
+    dest: /tmp/kernel-config
+    content: "{{ gunzip_kernel_config_output.stdout }}"
+
+- name: Ensure NFS kernel parameters enabled
+  lineinfile:
+    name: /tmp/kernel-config
+    line: "{{ item }}=y"
+    state: present
+  loop:
+    - CONFIG_NFS_V4_1
+    - CONFIG_NFS_V4_2
+  check_mode: true
+  register: kernel_nfs
+  failed_when: (kernel_nfs is changed) or (kernel_nfs is failed)
+
+- name: Install nfs-common
+  package:
+    name: nfs-common
+    state: present
+  become: true

@@ -5,11 +5,22 @@
 - include_tasks: iscsi/rhel.yml
   when: ansible_os_family == 'RedHat'
 
+- include_tasks: iscsi/deb.yml
+  when: ansible_os_family == 'Debian'
+
 - include_tasks: nfs/rhel.yml
   when: ansible_os_family == 'RedHat'
 
+- include_tasks: nfs/rpios.yml
+  when:
+    - raspberry_pi | default(false)
+    - ansible_os_family == 'Debian'
+
 - include_tasks: utils/rhel.yml
   when: ansible_os_family == 'RedHat'
+
+- include_tasks: utils/deb.yml
+  when: ansible_os_family == 'Debian'
 
 - name: Set Node label/annotation to configure longhorn default disk
   kubernetes.core.k8s:
@@ -24,3 +35,4 @@
           node.longhorn.io/create-default-disk: config
         annotations:
           node.longhorn.io/default-disks-config: "{{ longhorn_default_disks_config | to_json }}"
+  when: longhorn_default_disks_config

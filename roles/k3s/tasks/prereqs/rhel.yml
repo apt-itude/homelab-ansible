@@ -7,6 +7,14 @@
   become: true
   register: k3s_firewalld_apiserver_port
 
+- name: Allow k3s flannel vxlan port in firewalld
+  ansible.posix.firewalld:
+    port: "8472/udp"
+    state: enabled
+    permanent: true
+  become: true
+  register: k3s_firewalld_flannel_vxlan_port
+
 - name: Add k3s Pod network to trusted zone in firewalld
   ansible.posix.firewalld:
     source: "{{ k3s_cluster_cidr }}"
@@ -30,4 +38,4 @@
     name: firewalld
     state: reloaded
   become: true
-  when: k3s_firewalld_apiserver_port.changed or k3s_firewalld_pod_network.changed or k3s_firewalld_service_network.changed
+  when: k3s_firewalld_apiserver_port.changed or k3s_firewalld_flannel_vxlan_port.changed or k3s_firewalld_pod_network.changed or k3s_firewalld_service_network.changed

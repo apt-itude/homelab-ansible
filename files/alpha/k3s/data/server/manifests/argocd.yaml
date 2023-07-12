@@ -24,16 +24,32 @@ spec:
         server.insecure: true
 ---
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
   name: apps
   namespace: argocd
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/apt-itude/homelab-kubernetes.git
-    targetRevision: HEAD
-    path: apps
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: argocd
+  generators:
+    - git:
+        repoURL: https://github.com/apt-itude/homelab-kubernetes.git
+        revision: HEAD
+        directories:
+          - path: apps/*
+  template:
+    metadata:
+      name: "{{ path.basename }}"
+      namespace: argocd
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: default
+      source:
+        path: "{{ path }}"
+        repoURL: https://github.com/apt-itude/homelab-kubernetes.git
+        targetRevision: HEAD
+      destination:
+        namespace: "{{ path.basename }}"
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true

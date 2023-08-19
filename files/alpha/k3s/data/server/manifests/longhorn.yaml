@@ -20,4 +20,8 @@ spec:
       defaultClassReplicaCount: 1
     ingress:
       enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: lucys-crib
       host: longhorn.lucyscrib.com
+      tls: true
+      tlsSecret: longhorn-lucys-crib-cert

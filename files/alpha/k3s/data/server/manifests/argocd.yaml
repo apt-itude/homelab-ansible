@@ -16,9 +16,15 @@ spec:
     server:
       ingress:
         enabled: true
+        annotations:
+          cert-manager.io/cluster-issuer: lucys-crib
         hosts:
           - argocd.lucyscrib.com
         pathType: ImplementationSpecific
+        tls:
+          - hosts:
+              - argocd.lucyscrib.com
+            secretName: argocd-lucys-crib-cert
     configs:
       params:
         server.insecure: true

@@ -21,7 +21,7 @@ spec:
     ingress:
       enabled: true
       annotations:
-        cert-manager.io/cluster-issuer: lucys-crib
+        cert-manager.io/cluster-issuer: lucys-crib-acme
       host: longhorn.lucyscrib.com
       tls: true
-      tlsSecret: longhorn-lucys-crib-cert
+      tlsSecret: longhorn-lucys-crib-cert-acme

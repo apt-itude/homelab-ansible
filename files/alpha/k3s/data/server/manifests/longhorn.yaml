@@ -15,6 +15,8 @@ spec:
   targetNamespace: longhorn-system
   valuesContent: |-
     defaultSettings:
+      backupTarget: s3://homelab-volume-backups@us-east-2/longhorn
+      backupTargetCredentialSecret: aws-creds
       createDefaultDiskLabeledNodes: true
       defaultReplicaCount: 1
     persistence:
@@ -26,3 +28,11 @@ spec:
       host: longhorn.lucyscrib.com
       tls: true
       tlsSecret: longhorn-lucys-crib-cert-acme
+---
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: aws-creds
+  namespace: longhorn-system
+spec:
+  itemPath: vaults/Homelab/items/longhorn-aws-creds

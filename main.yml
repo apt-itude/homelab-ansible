@@ -16,3 +16,9 @@
     - role: longhorn
       tags:
         - longhorn
+
+- hosts: avahi_daemon
+  roles:
+    - role: avahi-daemon
+      tags:
+        - avahi

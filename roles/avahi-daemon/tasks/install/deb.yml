@@ -1,0 +1,6 @@
+---
+- name: Install avahi-daemon
+  package:
+    name: avahi-daemon
+    state: present
+  become: true

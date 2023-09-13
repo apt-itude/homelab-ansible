@@ -1,0 +1,29 @@
+- include_tasks: install/rhel.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: install/deb.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Enable avahi-daemon reflector mode
+  community.general.ini_file:
+    path: /etc/avahi/avahi-daemon.conf
+    section: reflector
+    option: enable-reflector
+    value: "yes"
+    no_extra_spaces: true
+  become: true
+  register: configure_avahi_daemon
+
+- name: Enable and start avahi-daemon
+  systemd:
+    name: avahi-daemon
+    state: started
+    enabled: true
+  become: true
+
+- name: Restart avahi-daemon
+  systemd:
+    name: avahi-daemon
+    state: restarted
+  become: true
+  when: configure_avahi_daemon.changed

@@ -3,6 +3,7 @@
   community.general.modprobe:
     name: configs
     state: present
+  become: true
 
 - name: Unarchive kernel config
   command:

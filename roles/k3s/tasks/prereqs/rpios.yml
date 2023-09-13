@@ -6,4 +6,9 @@
     line: '\1 cgroup_memory=1 cgroup_enable=memory'
     backrefs: true
   become: true
-  notify: reboot
+  register: enable_cgroups
+
+- name: Reboot
+  ansible.builtin.reboot:
+  become: true
+  when: enable_cgroups.changed

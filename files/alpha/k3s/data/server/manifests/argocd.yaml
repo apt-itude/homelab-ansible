@@ -13,7 +13,40 @@ spec:
   chart: argo-cd
   targetNamespace: argocd
   valuesContent: |-
+    applicationSet:
+      resources:
+        limits:
+          memory: 100Mi
+        requests:
+          memory: 50Mi
+
+    controller:
+      resources:
+        limits:
+          memory: 500Mi
+        requests:
+          memory: 400Mi
+
+    dex:
+      enabled: false
+
+    notifications:
+      enabled: false
+
+    redis:
+      resources:
+        limits:
+          memory: 20Mi
+        requests:
+          memory: 10Mi
+
     server:
+      resources:
+        limits:
+          memory: 200Mi
+        requests:
+          memory: 100Mi
+
       ingress:
         enabled: true
         annotations:
@@ -25,6 +58,14 @@ spec:
           - hosts:
               - argocd.lucyscrib.com
             secretName: argocd-lucys-crib-cert-acme
+
+    repoServer:
+      resources:
+        limits:
+          memory: 100Mi
+        requests:
+          memory: 100Mi
+
     configs:
       params:
         server.insecure: true

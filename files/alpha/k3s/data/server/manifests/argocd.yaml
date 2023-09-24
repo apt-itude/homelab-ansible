@@ -61,10 +61,10 @@ spec:
 
     repoServer:
       resources:
-        limits:
-          memory: 100Mi
         requests:
-          memory: 100Mi
+          memory: 200Mi
+        limits:
+          memory: 300Mi
 
     configs:
       params:

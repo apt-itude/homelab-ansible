@@ -11,8 +11,12 @@ metadata:
 spec:
   repo: https://argoproj.github.io/argo-helm
   chart: argo-cd
+  version: 6.6.0
   targetNamespace: argocd
   valuesContent: |-
+    global:
+      domain: argocd.lucyscrib.com
+
     applicationSet:
       resources:
         limits:
@@ -51,13 +55,8 @@ spec:
         enabled: true
         annotations:
           cert-manager.io/cluster-issuer: lucys-crib-acme
-        hosts:
-          - argocd.lucyscrib.com
         pathType: ImplementationSpecific
-        tls:
-          - hosts:
-              - argocd.lucyscrib.com
-            secretName: argocd-lucys-crib-cert-acme
+        tls: true
 
     repoServer:
       resources:

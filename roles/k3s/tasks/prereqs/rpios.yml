@@ -1,7 +1,12 @@
 ---
+- name: Check for newer cmdline.txt file
+  stat:
+    path: /boot/firmware/cmdline.txt
+  register: new_cmdline_stat_result
+
 - name: Enable cgroups
   lineinfile:
-    path: /boot/cmdline.txt
+    path: "{{ '/boot/firmware/cmdline.txt' if new_cmdline_stat_result.stat.exists else '/boot/cmdline.txt' }}"
     regexp: '^((?!.*\bcgroup_memory=1 cgroup_enable=memory\b).*)$'
     line: '\1 cgroup_memory=1 cgroup_enable=memory'
     backrefs: true

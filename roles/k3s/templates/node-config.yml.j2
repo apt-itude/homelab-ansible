@@ -1,2 +1,3 @@
 node-name: {{ k3s_node_name }}
 data-dir: {{ k3s_data_dir }}
+node-label: {{ k3s_node_labels | to_json }}

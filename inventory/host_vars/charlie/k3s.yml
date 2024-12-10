@@ -1,0 +1,3 @@
+k3s_node_labels:
+  - lucyscrib.com/mdns-reflector=true
+  - lucyscrib.com/zwave-controller=true

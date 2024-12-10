@@ -1,0 +1,3 @@
+k3s_node_labels:
+  - lucyscrib.com/esphome-flasher=true
+  - lucyscrib.com/rtlamr-dongle=true

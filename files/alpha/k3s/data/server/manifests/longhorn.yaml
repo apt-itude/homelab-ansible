@@ -11,7 +11,7 @@ metadata:
 spec:
   repo: https://charts.longhorn.io
   chart: longhorn
-  version: 1.5.1
+  version: 1.7.2
   targetNamespace: longhorn-system
   valuesContent: |-
     defaultSettings:
@@ -19,6 +19,7 @@ spec:
       backupTargetCredentialSecret: aws-creds
       createDefaultDiskLabeledNodes: true
       defaultReplicaCount: 1
+      concurrentAutomaticEngineUpgradePerNodeLimit: 3
     persistence:
       defaultClassReplicaCount: 1
     ingress:

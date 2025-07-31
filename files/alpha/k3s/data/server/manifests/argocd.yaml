@@ -85,6 +85,8 @@ spec:
     metadata:
       name: "{{ path.basename }}"
       namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: "kargo-{{ path.basename }}:prod"
     spec:
       project: default
       source:
